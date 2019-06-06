@@ -1,0 +1,12 @@
+.idea/
+.DS_Store
+.vscode
+
+npm-debug.log
+node_modules/
+docs/
+dist/
+
+# local env files
+.env.local
+.env.*.local

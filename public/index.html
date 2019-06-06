@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .list li {
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <ul class="list"></ul>
+  </main>
+  <script src="/axios.min.js"></script>
+  <script>
+    const main = document.querySelector('main')
+    axios.get('/index').then(({ data }) => {
+      const htmlStr = data.list.map(({ path, desc, method = 'post', params }) =>
+        `<li>地址：<a href="${path}">${path}</a><br/>
+          方法：[${method}]<br/>
+          参数：${JSON.stringify(params) || ''}<br/>
+          描述：${desc ? `${desc}` : ''}</li>`)
+      document.querySelector('.list').innerHTML = htmlStr.join('')
+    })
+  </script>
+</body>
+</html>
