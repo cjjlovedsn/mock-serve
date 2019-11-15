@@ -19,8 +19,8 @@
       desc: '',
       // 回调方式
       callback ({ mock, random }) {
-        const success = Random.boolean()
-        return Mock.mock({
+        const success = random.boolean()
+        return mock({
           success,
           rows: success ? '@title()' : ''
         })
@@ -38,8 +38,8 @@
         'id|1+': 2,
         name: '@name()',
         // 单个属性也可以使用function
-        gender ({ req, random, }) {
-          return _req.body.id === 1 ? 1 : ~~Random.boolean()
+        gender ({ req, random }) {
+          return _req.body.id === 1 ? 1 : ~~random.boolean()
         }
       }
     }
