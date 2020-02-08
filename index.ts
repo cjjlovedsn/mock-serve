@@ -1,5 +1,6 @@
 import { create, defaults, bodyParser } from 'json-server'
-import { loadenv, loadData, choosePort, Config } from './util'
+import { loadenv, loadData, choosePort } from './util'
+import { MockServe } from './typings/index'
 import { join } from 'path'
 import glob from 'glob'
 const server = create()
@@ -28,7 +29,7 @@ server.use(bodyParser)
     if (err) throw err
     const list = files.reduce((src, file) => {
       const item = require(file).default
-      return src.concat(item.filter((item: Config) => !!item.path))
+      return src.concat(item.filter((item: MockServe.MockRequest) => !!item.path))
     }, [])
     server.get('/index', (_, res) => {
       res

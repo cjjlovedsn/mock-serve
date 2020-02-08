@@ -1,22 +1,13 @@
-import { Config } from '../util'
-
-/**
- * ```html
- * 15456136421
- * ```
- */
-const api: Array<Config> = [
+import { MockServe } from '../typings/index'
+const api: Array<MockServe.MockRequest> = [
   {
     path: '/userInfo',
-    callback: (): any => {
-      return {
-        success: true,
-        rows: {
-          name: '张三',
-          age: 18
-        }
+    callback: () => ({
+      code: 0,
+      data: {
+        name: '@cname'
       }
-    }
+    })
   },
   {
     path: '/test',

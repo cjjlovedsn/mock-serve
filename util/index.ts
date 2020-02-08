@@ -1,12 +1,12 @@
 import { readdir, stat } from 'fs'
 import { promisify } from 'util'
 import { join } from 'path'
-import { PathParams, Request, Response } from 'express-serve-static-core'
 import mockjs from 'mockjs'
 import { Application } from 'express'
 import detect from 'detect-port'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
+import { MockServe } from '../typings/index'
 export const resolve = (...args: string[]) => join(__dirname, ...args)
 
 export const loadenv = async (basedir: string) => {
@@ -22,35 +22,10 @@ export const loadenv = async (basedir: string) => {
   }
 }
 
-export interface ResponseData {
-  [prop: string]: any
-  [prop: number]: any
-}
-
-export interface CallbackArguments {
-  req: Request
-  res: Response
-  mockjs: mockjs.Mockjs
-  mock: mockjs.MockjsMock
-  random: mockjs.MockjsRandom
-}
-
-export interface Config {
-  path: PathParams
-  /**
-   * @default 'all'
-   */
-  method?: 'get' | 'post' | 'all'
-  data?: ResponseData
-  callback? (arg: CallbackArguments): any,
-  params?: { [prop: string]: string | number },
-  desc?: string
-}
-
-export const loadData = (source: Array<Config>, server: Application) => {
+export const loadData = (source: Array<MockServe.MockRequest>, server: Application) => {
   for (const { path, method, data = {}, callback } of source) {
-    let handler = (req: Request, res: Response) => {
-      let mockData: ResponseData
+    let handler = (req: any, res: any) => {
+      let mockData: MockServe.ResponseData
       if (callback) {
         mockData = callback({
           req,
@@ -58,7 +33,7 @@ export const loadData = (source: Array<Config>, server: Application) => {
           mockjs,
           mock: mockjs.mock,
           random: mockjs.Random
-        } as CallbackArguments)
+        })
       } else {
         mockData = Object.keys(data).reduce<any>((obj, k: string) => {
           const value = data[k]
@@ -100,7 +75,7 @@ export const choosePort = async (defaultPort: number) => {
     name: 'shouldChangePort',
     message: chalk.yellow(`${defaultPort}端口被占用，请重新指定端口`),
     default: port
-  }
+  } as any
   const answer: { shouldChangePort: number } = await inquirer.prompt(question)
   return answer.shouldChangePort
 }
